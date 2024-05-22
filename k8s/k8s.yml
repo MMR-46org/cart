@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: cart
+  labels:
+    app: cart
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cart
+  template:
+    metadata:
+      labels:
+        app: cart
+    spec:
+      initContainers:
+        - name: parameters-pull
+          image: docker.io/madhanmohanreddyeeda/github-repo-parameter-store-init-container-image
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /parameters
+              name: parameters
+          env:
+            - name: PARAMS
+              value: "dev.roboshop.cart.REDIS_HOST,REDIS_HOST dev.roboshop.cart.CATALOGUE_HOST,CATALOGUE_HOST  dev.roboshop.cart.CATALOGUE_PORT,CATALOGUE_PORT"
+      containers:
+        - name: cart
+          image: madhanmohanreddyeeda/github-repo-cart
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "100m"
+            limits:
+              memory: "150Mi"
+              cpu: "100m"
+          volumeMounts:
+            - mountPath: /parameters
+              name: parameters
+      volumes:
+        - name: parameters
+          emptyDir: { }
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart
+spec:
+  selector:
+    app: cart
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
