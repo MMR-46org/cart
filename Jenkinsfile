@@ -45,6 +45,13 @@ node ('workstation') {
     if (env.BRANCH_NAME == 'main') {
         echo "Nothing to do"
     }
+    else if (env.BRANCH_NAME ==~ 'PR.*') {
+       unitTests()
+       integrationTests()
+       codeQuality()
+       sast()
+       secretDetection()
+    }
     else if(env.TAG_NAME ==~ '.*') {
         sast()
         sca()
