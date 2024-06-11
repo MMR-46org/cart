@@ -1,22 +1,54 @@
-pipeline {
-  agent {
-    node {
-      label 'workstation'
-    }
-  }
-  stages {
-    stage('Docker build') {
-      steps {
-        sh 'docker build -t docker.io/madhanmohanreddyeeda/github-repo-cart .'
-      }
-    }
-
-    stage('Docker Push') {
-      steps {
-        sh 'docker push docker.io/madhanmohanreddyeeda/github-repo-cart'
-      }
-    }
-
+def unitTests() {
+  stage('Unit Tests') {
+    echo 'OK'
   }
 }
-//
+
+def integrationTests() {
+  stage('Integration Tests') {
+    echo 'OK'
+  }
+}
+
+def codeQuality() {
+  stage('Code Quality') {
+    echo 'OK'
+  }
+}
+
+def sast() {
+  stage ('SAST') {
+    echo 'OK'
+  }
+}
+
+def sca() {
+  stage ('SCA') {
+    echo 'OK'
+  }
+}
+
+def SECRETDetection() {
+  stage ('SECRET DETECTION') {
+    echo 'OK'
+  }
+}
+
+def ArtifactProduce() {
+  stage ('Artifact Produce') {
+    echo 'OK'
+  }
+}
+
+
+node ('workstation') {
+    if (env.BRANCH_NAME == "main") {
+        echo "Nothing to do"
+    }else if {
+        (env.BRANCH_NAME ==~ ".*") {
+            unitTests()
+            integrationTests()
+            codeQuality()
+        }
+    }
+}
