@@ -42,13 +42,12 @@ def ArtifactProduce() {
 
 
 node ('workstation') {
-    if (env.BRANCH_NAME == "main") {
+    if (env.BRANCH_NAME == 'main') {
         echo "Nothing to do"
     }
-    else if(env.BRANCH_NAME ==~ ".*") {
+    else if(env.BRANCH_NAME ==~ '.*') {
          unitTests()
          integrationTests()
          codeQuality()
-        }
     }
 }
