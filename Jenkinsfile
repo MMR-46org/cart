@@ -28,13 +28,13 @@ def sca() {
   }
 }
 
-def SECRETDetection() {
+def secretDetection() {
   stage ('SECRET DETECTION') {
     echo 'OK'
   }
 }
 
-def ArtifactProduce() {
+def artifactProduce() {
   stage ('Artifact Produce') {
     echo 'OK'
   }
@@ -44,6 +44,13 @@ def ArtifactProduce() {
 node ('workstation') {
     if (env.BRANCH_NAME == 'main') {
         echo "Nothing to do"
+    }
+    else if(env.TAG_NAME ==~ '.*') {
+        sast()
+        sca()
+        secretDetection()
+        artifactProduce()
+
     }
     else if(env.BRANCH_NAME ==~ '.*') {
          unitTests()
