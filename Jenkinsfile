@@ -5,7 +5,7 @@
 node ('workstation') {
     if (env.BRANCH_NAME == 'main') {
         echo "Nothing to do"
-        common.sast
+        common.sast()
     }
     else if (env.BRANCH_NAME ==~ 'PR.*') {
        unitTests()
